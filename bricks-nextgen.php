@@ -37,7 +37,7 @@ require_once 'includes/class-bricks-nextgen.php';
  */
 function run_bricks_nextgen() {
 	
-	$plugin = new Plugin();
+	$plugin = new \BricksNextgen\Plugin();
 	$plugin->run();
 
 }
