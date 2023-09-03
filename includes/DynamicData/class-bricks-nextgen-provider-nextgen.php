@@ -1,17 +1,12 @@
 <?php
 
-namespace BricksNextgen;
+namespace BricksNextgen\DynamicData;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-if ( ! class_exists("\Bricks\Integrations\Dynamic_Data\Providers\Base") ) {
-	return;
-}
 
 class Provider_Nextgen extends \Bricks\Integrations\Dynamic_Data\Providers\Base {
 
 	public function register_tags() {
-		do_action( 'qm/debug', 'Hello from the NextGEN provider class!' );
 		$tags = $this->get_tags_config();
 
 		foreach ( $tags as $key => $tag ) {
@@ -21,6 +16,10 @@ class Provider_Nextgen extends \Bricks\Integrations\Dynamic_Data\Providers\Base 
 				'group'    => $tag['group'],
 				'provider' => $this->name,
 			];
+
+			if ( ! empty( $tag['deprecated'] ) ) {
+				$this->tags[ $key ]['deprecated'] = $tag['deprecated'];
+			}
 
 			if ( ! empty( $tag['render'] ) ) {
 				$this->tags[ $key ]['render'] = $tag['render'];

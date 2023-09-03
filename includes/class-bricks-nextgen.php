@@ -125,8 +125,8 @@ class Plugin
          * The class responsible for orchestrating the providers of the
          * core plugin.
          */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-bricks-nextgen-providers.php';        
-
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/DynamicData/class-bricks-nextgen-providers.php';        
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/DynamicData/class-bricks-nextgen-provider-nextgen.php';     
         /**
          * The class responsible for defining all actions that occur in the admin area.
          */
@@ -145,10 +145,17 @@ class Plugin
     private function set_provider()
     {
         $providers = ['nextgen']; // Replace these with your actual provider keys
-        //$providers = ['provider1', 'provider2', 'provider3']; // Replace these with your actual provider keys
-        $plugin_providers = new Providers($providers);
-        $this->loader->add_action('init', $plugin_providers, 'register');
-        
+        $plugin_providers = new \BricksNextgen\DynamicData\Providers($providers);
+        $this->loader->add_action('plugins_loaded', $plugin_providers, 'register');
+
+        \BricksNextgen\DynamicData\Provider_Nextgen::register($providers);
+        // Check if the Base class from Bricks exists.
+        if ( class_exists("\Bricks\Integrations\Dynamic_Data\Providers\Base") ) {
+            do_action( 'qm/debug', 'Base class exists!' );
+            // Assuming you have a similar static method in your Bricks_Nextgen_Providers class.
+            //Bricks_Nextgen_Providers::register($providers);
+            \BricksNextgen\Provider_Nextgen::register('nextgen');
+        }
     }
 
 

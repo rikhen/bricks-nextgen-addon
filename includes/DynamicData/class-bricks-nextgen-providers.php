@@ -1,6 +1,6 @@
 <?php
 
-namespace BricksNextgen;
+namespace BricksNextgen\DynamicData;
 /**
  * Register all dynamic data providers for the plugin
  *
@@ -22,6 +22,9 @@ namespace BricksNextgen;
  * @subpackage Bricks_Nextgen/includes
  * @author     H. Liebel <mail@henrikliebel.com>
  */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 class Providers {
 	/**
 	 * Holds the providers
@@ -45,7 +48,6 @@ class Providers {
 	private $tags = [];
 
 	public function __construct( $providers ) {
-		do_action( 'qm/debug', 'Hello from the provider plugin class!' );
 		$this->providers_keys = $providers;
 	}
 
@@ -69,9 +71,9 @@ class Providers {
 		add_filter( 'bricks/dynamic_tags_list', [ $instance, 'add_tags_to_builder' ] );
 
 		// Render dynamic data in builder too (when template preview post ID is set)
-		add_filter( 'bricks/frontend/render_data', [ $instance, 'render' ], 10, 2 );
+		add_filter( 'bricks/frontend/render_data', [ $instance, 'render' ], 10, 3 );
 
-		add_filter( 'bricks/dynamic_data/render_content', [ $instance, 'render' ], 10, 3 );
+		add_filter( 'bricks/dynamic_data/render_content', [ $instance, 'render' ], 15, 3 );
 	}
 
 	public function load_dynamic_data() {
@@ -102,10 +104,15 @@ class Providers {
 	}
 
 	public function register_providers() {
-
+		if ( ! $this->load_dynamic_data() ) {
+			return;
+		}
+		
 		foreach ( $this->providers_keys as $provider ) {
-			$classname = '\BricksNextgen\Provider_' . str_replace( ' ', '_', ucwords( str_replace( '-', ' ', $provider ) ) );
+			
+			$classname = '\BricksNextgen\DynamicData\Provider_' . str_replace( ' ', '_', ucwords( str_replace( '-', ' ', $provider ) ) );
 
+			do_action( 'qm/debug', $classname );
 			if ( $classname::load_me() ) {
 				$this->providers[ $provider ] = new $classname( str_replace( '-', '_', $provider ) );
 			}
