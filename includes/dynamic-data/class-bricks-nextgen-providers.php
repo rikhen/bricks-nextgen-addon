@@ -48,10 +48,12 @@ class Providers {
 	private $tags = [];
 
 	public function __construct( $providers ) {
+		$providers = ['nextgen'];
 		$this->providers_keys = $providers;
 	}
 
 	public static function register( $providers = [] ) {
+		$providers = ['nextgen'];
 		$instance = new self( $providers );
 
 		// Priority set to 10000 due to CMB2 priority
@@ -107,12 +109,9 @@ class Providers {
 		if ( ! $this->load_dynamic_data() ) {
 			return;
 		}
-		
+		 
 		foreach ( $this->providers_keys as $provider ) {
-			
 			$classname = '\BricksNextgen\DynamicData\Provider_' . str_replace( ' ', '_', ucwords( str_replace( '-', ' ', $provider ) ) );
-
-			do_action( 'qm/debug', $classname );
 			if ( $classname::load_me() ) {
 				$this->providers[ $provider ] = new $classname( str_replace( '-', '_', $provider ) );
 			}

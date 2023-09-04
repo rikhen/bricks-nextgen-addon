@@ -12,8 +12,6 @@
  * Text Domain:       webshr
 */
 
-namespace BricksNextgen;
-
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
@@ -27,6 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'BRICKS_NEXTGEN_VERSION', '0.0.1' );
 
 // Load plugin class files.
+require __DIR__ . '/vendor/autoload.php';
 require_once 'includes/class-bricks-nextgen.php';
 
 /**
@@ -36,10 +35,8 @@ require_once 'includes/class-bricks-nextgen.php';
  * @return object WordPress_Plugin_Template
  */
 function run_bricks_nextgen() {
-	
 	$plugin = new \BricksNextgen\Plugin();
 	$plugin->run();
-
 }
 
-run_bricks_nextgen();
+add_action('after_setup_theme', 'run_bricks_nextgen');
