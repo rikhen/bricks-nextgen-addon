@@ -79,7 +79,6 @@ class Plugin
         //$this->define_admin_hooks();
         //$this->define_public_hooks();
         //$this->is_nextgen_active();
-
     }
 
     /**
@@ -146,13 +145,13 @@ class Plugin
 
         $plugin_providers = new \BricksNextgen\DynamicData\Providers($providers);
 
-        $this->loader->add_action('plugins_loaded', $plugin_providers, 'register');
+        $this->loader->add_action('init', $plugin_providers, 'register');
 
         // Check if the Base class from Bricks exists.
         if ( class_exists('\Bricks\Integrations\Dynamic_Data\Providers\Base') ) {
 
             // Register the provider
-            //\BricksNextgen\DynamicData\Provider_Nextgen::register($providers);
+            \BricksNextgen\DynamicData\Providers::register($providers);
         }
     }
 
@@ -160,7 +159,7 @@ class Plugin
     private function set_query_loop()
     {
         $plugin_query_loop = new Query_Loop();
-        $this->loader->add_action('plugins_loaded', $plugin_query_loop, 'init', 20);
+        $this->loader->add_action('init', $plugin_query_loop, 'init', 20);
     }
     /**
      * Define the locale for this plugin for internationalization.

@@ -39,4 +39,4 @@ function run_bricks_nextgen() {
 	$plugin->run();
 }
 
-add_action('after_setup_theme', 'run_bricks_nextgen');
+add_action('init', 'run_bricks_nextgen');
